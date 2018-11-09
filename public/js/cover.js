@@ -154,6 +154,16 @@ $('.ui-all-notes').click(() => {
   }
 })
 
+$('.ui-hide-untitled-notes').click(() => {
+  if ($('.ui-hide-untitled-notes').attr('class').match('active')) {
+    $('.ui-hide-untitled-notes').removeClass('active')
+    allNotesList.filter()
+  } else {
+    $('.ui-hide-untitled-notes').addClass('active')
+    allNotesList.filter(note => note.values().text !== 'Untitled')
+  }
+})
+
 // ALL NOTES
 
 function checkAllNotesList () {
