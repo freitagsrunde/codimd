@@ -1,8 +1,6 @@
 CodiMD
 ===
 
-[![Standard - JavaScript Style Guide][standardjs-image]][standardjs-url]
-
 [![#CodiMD on matrix.org][matrix.org-image]][matrix.org-url]
 [![build status][travis-image]][travis-url]
 [![version][github-version-badge]][github-release-page]
@@ -84,6 +82,8 @@ Just to more confusion: We are still friends with HackMD :heart:
 7. Run `node_modules/.bin/sequelize db:migrate`, this step will migrate your db to the latest schema
 8. Run the server as you like (node, forever, pm2)
 
+To stay up to date with your installation it's recommended to join our [Matrix channel][matrix.org-url] or subscribe to the [release feed][github-release-feed].
+
 ## Heroku Deployment
 
 You can quickly setup a sample Heroku CodiMD application by clicking the button below.
@@ -141,6 +141,7 @@ If you are upgrading CodiMD from an older version, follow these steps:
 6. Run `node_modules/.bin/sequelize db:migrate`, this step will migrate your db to the latest schema
 7. Start your whole new server!
 
+To stay up to date with your installation it's recommended to join our [Matrix channel][matrix.org-url] or subscribe to the [release feed][github-release-feed].
 
 * **migrate-to-1.1.0**
 
@@ -179,6 +180,7 @@ There are some config settings you need to change in the files below.
 | `CMD_HOST` | `localhost` | host to listen on |
 | `CMD_PORT` | `80` | web app port |
 | `CMD_PATH` | `/var/run/codimd.sock` | path to UNIX domain socket to listen on (if specified, `CMD_HOST` and `CMD_PORT` are ignored) |
+| `CMD_LOGLEVEL` | `info` | Defines what kind of logs are provided to stdout. |
 | `CMD_ALLOW_ORIGIN` | `localhost, codimd.org` | domain name whitelist (use comma to separate) |
 | `CMD_PROTOCOL_USESSL` | `true` or `false` | set to use SSL protocol for resources path (only applied when domain is set) |
 | `CMD_URL_ADDPORT` | `true` or `false` | set to add port on callback URL (ports `80` or `443` won't be applied) (only applied when domain is set) |
@@ -186,6 +188,7 @@ There are some config settings you need to change in the files below.
 | `CMD_ALLOW_ANONYMOUS` | `true` or `false` | set to allow anonymous usage (default is `true`) |
 | `CMD_ALLOW_ANONYMOUS_EDITS` | `true` or `false` | if `allowAnonymous` is `true`, allow users to select `freely` permission, allowing guests to edit existing notes (default is `false`) |
 | `CMD_ALLOW_FREEURL` | `true` or `false` | set to allow new note creation by accessing a nonexistent note URL |
+| `CMD_FORBIDDEN_NODE_IDS` | `'robots.txt'` | disallow creation of notes, even if `CMD_ALLOW_FREEURL` is `true` |
 | `CMD_DEFAULT_PERMISSION` | `freely`, `editable`, `limited`, `locked` or `private` | set notes default permission (only applied on signed users) |
 | `CMD_DB_URL` | `mysql://localhost:3306/database` | set the database URL |
 | `CMD_SESSION_SECRET` | no example | Secret used to sign the session cookie. If non is set, one will randomly generated on startup |
@@ -260,6 +263,7 @@ There are some config settings you need to change in the files below.
 | `CMD_HSTS_PRELOAD` | `true` | whether to allow preloading of the site's HSTS status (e.g. into browsers) |
 | `CMD_CSP_ENABLE` | `true` | whether to enable Content Security Policy (directives cannot be configured with environment variables) |
 | `CMD_CSP_REPORTURI` | `https://<someid>.report-uri.com/r/d/csp/enforce` | Allows to add a URL for CSP reports in case of violations |
+| `CMD_SOURCE_URL` | `https://github.com/hackmdio/codimd/tree/<current commit>` | Provides the link to the source code of CodiMD on the entry page (Please, make sure you change this when you run a modified version) |
 
 ***Note:** Due to the rename process we renamed all `HMD_`-prefix variables to be `CMD_`-prefixed. The old ones continue to work.*
 
@@ -273,6 +277,7 @@ There are some config settings you need to change in the files below.
 | `host` | `localhost` | host to listen on |
 | `port` | `80` | web app port |
 | `path` | `/var/run/codimd.sock` | path to UNIX domain socket to listen on (if specified, `host` and `port` are ignored) |
+| `loglevel` | `info` | Defines what kind of logs are provided to stdout. |
 | `allowOrigin` | `['localhost']` | domain name whitelist |
 | `useSSL` | `true` or `false` | set to use SSL server (if `true`, will auto turn on `protocolUseSSL`) |
 | `hsts` | `{"enable": true, "maxAgeSeconds": 31536000, "includeSubdomains": true, "preload": true}` | [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) options to use with HTTPS (default is the example value, max age is a year) |
@@ -283,6 +288,7 @@ There are some config settings you need to change in the files below.
 | `allowAnonymous` | `true` or `false` | set to allow anonymous usage (default is `true`) |
 | `allowAnonymousEdits` | `true` or `false` | if `allowAnonymous` is `true`: allow users to select `freely` permission, allowing guests to edit existing notes (default is `false`) |
 | `allowFreeURL` | `true` or `false` | set to allow new note creation by accessing a nonexistent note URL |
+| `forbiddenNoteIDs` | `['robots.txt']` | disallow creation of notes, even if `allowFreeUrl` is `true` |
 | `defaultPermission` | `freely`, `editable`, `limited`, `locked`, `protected` or `private` | set notes default permission (only applied on signed users) |
 | `dbURL` | `mysql://localhost:3306/database` | set the db URL; if set, then db config (below) won't be applied |
 | `db` | `{ "dialect": "sqlite", "storage": "./db.codimd.sqlite" }` | set the db configs, [see more here](http://sequelize.readthedocs.org/en/latest/api/sequelize/) |
@@ -310,6 +316,7 @@ There are some config settings you need to change in the files below.
 | `minio` | `{ "accessKey": "YOUR_MINIO_ACCESS_KEY", "secretKey": "YOUR_MINIO_SECRET_KEY", "endpoint": "YOUR_MINIO_HOST", port: 9000, secure: true }` | When `imageUploadType` is set to `minio`, you need to set this key. Also checkout our [Minio Image Upload Guide](docs/guides/minio-image-upload.md) |
 | `s3` | `{ "accessKeyId": "YOUR_S3_ACCESS_KEY_ID", "secretAccessKey": "YOUR_S3_ACCESS_KEY", "region": "YOUR_S3_REGION" }` | When `imageuploadtype` be set to `s3`, you would also need to setup this key, check our [S3 Image Upload Guide](docs/guides/s3-image-upload.md) |
 | `s3bucket` | `YOUR_S3_BUCKET_NAME` | bucket name when `imageUploadType` is set to `s3` or `minio` |
+| `sourceURL` | `https://github.com/hackmdio/codimd/tree/<current commit>` | Provides the link to the source code of CodiMD on the entry page (Please, make sure you change this when you run a modified version) |
 
 <sup>1</sup>: relative paths are based on CodiMD's base directory
 
@@ -369,7 +376,6 @@ See more at [http://operational-transformation.github.io/](http://operational-tr
 [travis-url]: https://travis-ci.org/hackmdio/codimd
 [github-version-badge]: https://img.shields.io/github/release/hackmdio/codimd.svg
 [github-release-page]: https://github.com/hackmdio/codimd/releases
-[standardjs-image]: https://cdn.rawgit.com/feross/standard/master/badge.svg
-[standardjs-url]: https://github.com/feross/standard
+[github-release-feed]: https://github.com/hackmdio/codimd/releases.atom
 [poeditor-image]: https://img.shields.io/badge/POEditor-translate-blue.svg
 [poeditor-url]: https://poeditor.com/join/project/1OpGjF2Jir

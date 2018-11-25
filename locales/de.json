@@ -113,7 +113,8 @@
 	"Delete user": "Benutzer löschen",
 	"Export user data": "Exportiere Nutzerdaten",
 	"Help us translating on %s": "Help us translating on %s",
-	"All Notes": "Alle Notizen",
+    "Source Code": "Quelltext"
+    "All Notes": "Alle Notizen",
 	"Below are all non-private Notes from the Server": "Alle nicht-privaten Notizen des Servers",
 	"Refresh all notes": "Refresh all notes",
 	"No Notes": "No Notes",
