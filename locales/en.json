@@ -114,9 +114,10 @@
 	"Export user data": "Export user data",
 	"Help us translating on %s": "Help us translating on %s",
   "All Notes": "All Notes",
-  "Below are all non-private Notes from the Server": "Below are all non-private Notes from the Server",
-	"Source Code": "Source Code",
+	"Below are all non-private Notes from the Server": "Below are all non-private Notes from the Server","Source Code": "Source Code",
 	"Powered by %s": "Powered by %s",
 	"Register": "Register",
-  "Hide Untitled": "Hide Untitled"
+	"Hide Untitled": "Hide Untitled",
+	"Refresh all notes": "Refresh all notes",
+	"No Notes": "No Notes"
 }

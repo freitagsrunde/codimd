@@ -775,7 +775,7 @@ export function generateToc (id) {
   target.html('')
   /* eslint-disable no-unused-vars */
   var toc = new window.Toc('doc', {
-    level: 3,
+    level: 4,
     top: -1,
     class: 'toc',
     ulClass: 'nav',
@@ -974,7 +974,7 @@ export function renderTOC (view) {
     target.html('')
     /* eslint-disable no-unused-vars */
     const TOC = new window.Toc('doc', {
-      level: 3,
+      level: 4,
       top: -1,
       class: 'toc',
       targetId: id,
