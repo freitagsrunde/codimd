@@ -170,14 +170,14 @@ function checkAllNotesList () {
   if ($('#all-notes-list').children().length > 0) {
     $('.pagination').show()
     $('.ui-nonotes').hide()
-  } else if ($('#history-list').children().length === 0) {
+  } else if ($('#all-notes-list').children().length === 0) {
     $('.pagination').hide()
-    $('.ui-nohistory').slideDown()
+    $('.ui-nonotes').slideDown()
   }
 }
 
 function parseAllNotesCallback (list, notehistory) {
-  checkHistoryList()
+  checkAllNotesList()
   // sort by pinned then timestamp
   list.sort('', {
     sortFunction (a, b) {
@@ -269,6 +269,29 @@ $('.ui-refresh-all-notes').click(() => {
     checkAllNotesList()
     $('#all-notes-list').slideDown('fast')
   })
+})
+
+$('#all-notes-tags').on('change', function () {
+  const tags = []
+  const data = $(this).select2('data')
+  for (let i = 0; i < data.length; i++) { tags.push(data[i].text) }
+  if (tags.length > 0) {
+    allNotesList.filter(item => {
+      const values = item.values()
+      if (!values.tags) return false
+      let found = false
+      for (let i = 0; i < tags.length; i++) {
+        if (values.tags.includes(tags[i])) {
+          found = true
+          break
+        }
+      }
+      return found
+    })
+  } else {
+    allNotesList.filter()
+  }
+  checkAllNotesList()
 })
 
 // HISTORY
