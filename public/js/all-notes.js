@@ -2,8 +2,8 @@
 /* global serverurl, moment */
 
 // import store from 'store'
-import S from 'string'
-import LZString from 'lz-string'
+// import S from '@hackmd/string'
+import LZString from '@hackmd/lz-string'
 
 import {
   checkNoteIdValid,
