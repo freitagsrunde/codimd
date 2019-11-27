@@ -98,29 +98,29 @@ pageInit()
 
 function pageInit () {
   checkIfAuth(
-        data => {
-          $('.ui-signin').hide()
-          $('.ui-or').hide()
-          $('.ui-welcome').show()
-          if (data.photo) $('.ui-avatar').prop('src', data.photo).show()
-          else $('.ui-avatar').prop('src', '').hide()
-          $('.ui-name').html(data.name)
-          $('.ui-signout').show()
-          $('.ui-history').click()
-          parseServerToHistory(historyList, parseHistoryCallback)
-          $('.ui-all-notes').click()
-          parseServerAllNotes(allNotesList, parseAllNotesCallback)
-        },
-        () => {
-          $('.ui-signin').show()
-          $('.ui-or').show()
-          $('.ui-welcome').hide()
-          $('.ui-avatar').prop('src', '').hide()
-          $('.ui-name').html('')
-          $('.ui-signout').hide()
-          parseStorageToHistory(historyList, parseHistoryCallback)
-        }
-    )
+    data => {
+      $('.ui-signin').hide()
+      $('.ui-or').hide()
+      $('.ui-welcome').show()
+      if (data.photo) $('.ui-avatar').prop('src', data.photo).show()
+      else $('.ui-avatar').prop('src', '').hide()
+      $('.ui-name').html(data.name)
+      $('.ui-signout').show()
+      $('.ui-history').click()
+      parseServerToHistory(historyList, parseHistoryCallback)
+      $('.ui-all-notes').click()
+      parseServerAllNotes(allNotesList, parseAllNotesCallback)
+    },
+    () => {
+      $('.ui-signin').show()
+      $('.ui-or').show()
+      $('.ui-welcome').hide()
+      $('.ui-avatar').prop('src', '').hide()
+      $('.ui-name').html('')
+      $('.ui-signout').hide()
+      parseStorageToHistory(historyList, parseHistoryCallback)
+    }
+  )
 }
 
 $('.masthead-nav li').click(function () {

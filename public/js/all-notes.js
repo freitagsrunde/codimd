@@ -9,6 +9,7 @@ import {
   checkNoteIdValid,
   encodeNoteId
 } from './utils'
+import escapeHTML from 'lodash/escape'
 
 // import {
 //   checkIfAuth
@@ -49,7 +50,7 @@ function parseAllNotes (list, allNotes, callback) {
     for (let i = 0; i < allNotes.length; i++) {
       // // migrate LZString encoded id to base64url encoded id
       try {
-        let id = LZString.decompressFromBase64(allNotes[i].id)
+        const id = LZString.decompressFromBase64(allNotes[i].id)
         if (id && checkNoteIdValid(id)) {
           allNotes[i].id = encodeNoteId(id)
         }
@@ -64,8 +65,8 @@ function parseAllNotes (list, allNotes, callback) {
       allNotes[i].fromNow = timestamp.fromNow()
       allNotes[i].time = timestamp.format('llll')
       // prevent XSS
-      allNotes[i].text = S(allNotes[i].text).escapeHTML().s
-      allNotes[i].tags = (allNotes[i].tags && allNotes[i].tags.length > 0) ? S(allNotes[i].tags).escapeHTML().s.split(',') : []
+      allNotes[i].text = escapeHTML(allNotes[i].text)
+      allNotes[i].tags = (allNotes[i].tags && allNotes[i].tags.length > 0) ? escapeHTML(allNotes[i].tags).split(',') : []
       // add to list
       if (allNotes[i].id && list.get('id', allNotes[i].id).length === 0) { list.add(allNotes[i]) }
     }
