@@ -1,7 +1,7 @@
 /* eslint-env browser, jquery */
 /* global serverurl, moment */
 
-import store from 'store'
+// import store from 'store'
 import LZString from '@hackmd/lz-string'
 
 import escapeHTML from 'lodash/escape'
@@ -11,17 +11,16 @@ import {
   encodeNoteId
 } from './utils'
 
-import {checkIfAuth} from './lib/common/login'
+import { checkIfAuth } from './lib/common/login'
 
-import {urlpath} from './lib/config'
+// import { urlpath } from './lib/config'
 
-
-export function parseServerAllNotes(list, callback) {
-  checkIfAuth(
-    $.get(`${serverurl}/history`)
+export function parseServerAllNotes (list, callback) {
+  checkIfAuth(() =>
+    $.get(`${serverurl}/allNotes`)
       .done(data => {
-        if (data.history) {
-          parseAllNotes(list, data.history, callback)
+        if (data.allNotes) {
+          parseAllNotes(list, data.allNotes, callback)
         }
       })
       .fail((xhr, status, error) => {
@@ -30,7 +29,7 @@ export function parseServerAllNotes(list, callback) {
   )
 }
 
-function parseAllNotes(list, allNotes, callback) {
+function parseAllNotes (list, allNotes, callback) {
   if (!callback) return
   else if (!list || !allNotes) callback(list, allNotes)
   else if (allNotes && allNotes.length > 0) {
@@ -45,7 +44,7 @@ function parseAllNotes(list, allNotes, callback) {
         console.error(err)
       }
       // parse time to timestamp and fromNow
-      const timestamp = (typeof allNotes[i].time === 'number' ? moment(allNotes[i].time) : moment(allNotes[i].time, 'MMMM Do YYYY, h:mm:ss a'))
+      const timestamp = (typeof allNotes[i].updatedAt === 'number' ? moment(allNotes[i].updatedAt) : moment(allNotes[i].updatedAt, 'MMMM Do YYYY, h:mm:ss a'))
       allNotes[i].timestamp = timestamp.valueOf()
       allNotes[i].fromNow = timestamp.fromNow()
       allNotes[i].time = timestamp.format('llll')
@@ -53,11 +52,8 @@ function parseAllNotes(list, allNotes, callback) {
       allNotes[i].text = escapeHTML(allNotes[i].text)
       allNotes[i].tags = (allNotes[i].tags && allNotes[i].tags.length > 0) ? escapeHTML(allNotes[i].tags).split(',') : []
       // add to list
-      if (allNotes[i].id && list.get('id', allNotes[i].id).length === 0) {
-        list.add(allNotes[i])
-      }
+      if (allNotes[i].id && list.get('id', allNotes[i].id).length === 0) { list.add(allNotes[i]) }
     }
   }
   callback(list, allNotes)
 }
-

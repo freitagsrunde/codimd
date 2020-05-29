@@ -23,6 +23,10 @@ import {
   saveStorageHistoryToServer
 } from './history'
 
+import {
+  parseServerAllNotes
+} from './all-notes'
+
 import { saveAs } from 'file-saver'
 import List from 'list.js'
 import unescapeHTML from 'lodash/unescape'
@@ -32,7 +36,7 @@ require('./locale')
 require('../css/cover.css')
 require('../css/site.css')
 
-const options = {
+const historyOptions = {
   valueNames: ['id', 'text', 'timestamp', 'fromNow', 'time', 'tags', 'pinned'],
   item: `<li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
           <span class="id" style="display:none;"></span>
@@ -58,7 +62,34 @@ const options = {
     outerWindow: 1
   }]
 }
-const historyList = new List('history', options)
+const historyList = new List('history', historyOptions)
+
+const allNotesOptions = {
+  valueNames: ['id', 'text', 'timestamp', 'fromNow', 'time', 'tags'],
+  item: `<li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+          <span class="id" style="display:none;"></span>
+          <a href="#">
+            <div class="item">
+              <!--<div class="ui-allnotes-pin fa fa-thumb-tack fa-fw"></div>-->
+              <div class="content">
+                <h4 class="text"></h4>
+                <p>
+                  <i><i class="fa fa-clock-o"></i> visited </i><i class="fromNow"></i>
+                  <br>
+                  <i class="timestamp" style="display:none;"></i>
+                  <i class="time"></i>
+                </p>
+                <p class="tags"></p>
+              </div>
+            </div>
+          </a>
+        </li>`,
+  page: 18,
+  pagination: [{
+    outerWindow: 1
+  }]
+}
+const allNotesList = new List('all-notes', allNotesOptions)
 
 window.migrateHistoryFromTempCallback = pageInit
 setloginStateChangeEvent(pageInit)
@@ -77,6 +108,8 @@ function pageInit () {
       $('.ui-signout').show()
       $('.ui-history').click()
       parseServerToHistory(historyList, parseHistoryCallback)
+      $('.ui-all-notes').click()
+      parseServerAllNotes(allNotesList, parseAllNotesCallback)
     },
     () => {
       $('.ui-signin').show()
@@ -113,6 +146,155 @@ $('.ui-history').click(() => {
     $('#history').fadeIn()
   }
 })
+
+$('.ui-all-notes').click(() => {
+  if (!$('#all-notes').is(':visible')) {
+    $('.section:visible').hide()
+    $('#all-notes').fadeIn()
+  }
+})
+
+$('.ui-hide-untitled-notes').click(() => {
+  if ($('.ui-hide-untitled-notes').attr('class').match('active')) {
+    $('.ui-hide-untitled-notes').removeClass('active')
+    allNotesList.filter()
+  } else {
+    $('.ui-hide-untitled-notes').addClass('active')
+    allNotesList.filter(note => note.values().text !== 'Untitled')
+  }
+})
+
+// ALL NOTES
+
+function checkAllNotesList () {
+  if ($('#all-notes-list').children().length > 0) {
+    $('.pagination').show()
+    $('.ui-nonotes').hide()
+  } else if ($('#all-notes-list').children().length === 0) {
+    $('.pagination').hide()
+    $('.ui-nonotes').slideDown()
+  }
+}
+
+function parseAllNotesCallback (list, notehistory) {
+  checkAllNotesList()
+  // sort by pinned then timestamp
+  list.sort('', {
+    sortFunction (a, b) {
+      const notea = a.values()
+      const noteb = b.values()
+      if (notea.pinned && !noteb.pinned) {
+        return -1
+      } else if (!notea.pinned && noteb.pinned) {
+        return 1
+      } else {
+        if (notea.timestamp > noteb.timestamp) {
+          return -1
+        } else if (notea.timestamp < noteb.timestamp) {
+          return 1
+        } else {
+          return 0
+        }
+      }
+    }
+  })
+  // parse filter tags
+  const filtertags = []
+  for (let i = 0, l = list.items.length; i < l; i++) {
+    const tags = list.items[i]._values.tags
+    if (tags && tags.length > 0) {
+      for (let j = 0; j < tags.length; j++) {
+        // push info filtertags if not found
+        let found = false
+        if (filtertags.includes(tags[j])) { found = true }
+        if (!found) { filtertags.push(tags[j]) }
+      }
+    }
+  }
+  buildTagsFilter(filtertags)
+}
+
+// update items whenever list updated
+allNotesList.on('updated', e => {
+  for (let i = 0, l = e.items.length; i < l; i++) {
+    const item = e.items[i]
+    if (item.visible()) {
+      const itemEl = $(item.elm)
+      const values = item._values
+      const a = itemEl.find('a')
+      const pin = itemEl.find('.ui-allNotes-pin')
+      const tagsEl = itemEl.find('.tags')
+      // parse link to element a
+      a.attr('href', `${serverurl}/${values.id}`)
+      // parse pinned
+      if (values.pinned) {
+        pin.addClass('active')
+      } else {
+        pin.removeClass('active')
+      }
+      // parse tags
+      const tags = values.tags
+      if (tags && tags.length > 0 && tagsEl.children().length <= 0) {
+        const labels = []
+        for (let j = 0; j < tags.length; j++) {
+          // push into the item label
+          labels.push(`<span class='label label-default'>${tags[j]}</span>`)
+        }
+        tagsEl.html(labels.join(' '))
+      }
+    }
+  }
+  $('.ui-allNotes-pin').off('click')
+  $('.ui-allNotes-pin').on('click', historyPinClick)
+})
+
+$('.ui-refresh-all-notes').click(() => {
+  const lastTags = $('.ui-use-tags').select2('val')
+  $('.ui-use-tags').select2('val', '')
+  allNotesList.filter()
+  const lastKeyword = $('.search').val()
+  $('.search').val('')
+  allNotesList.search()
+  $('#all-notes-list').slideUp('fast')
+  $('.pagination').hide()
+
+  resetCheckAuth()
+  allNotesList.clear()
+  parseServerAllNotes(allNotesList, (list, notehistory) => {
+    parseAllNotesCallback(list, notehistory)
+    $('.ui-use-tags').select2('val', lastTags)
+    $('.ui-use-tags').trigger('change')
+    allNotesList.search(lastKeyword)
+    $('.search').val(lastKeyword)
+    checkAllNotesList()
+    $('#all-notes-list').slideDown('fast')
+  })
+})
+
+$('#all-notes-tags').on('change', function () {
+  const tags = []
+  const data = $(this).select2('data')
+  for (let i = 0; i < data.length; i++) { tags.push(data[i].text) }
+  if (tags.length > 0) {
+    allNotesList.filter(item => {
+      const values = item.values()
+      if (!values.tags) return false
+      let found = false
+      for (let i = 0; i < tags.length; i++) {
+        if (values.tags.includes(tags[i])) {
+          found = true
+          break
+        }
+      }
+      return found
+    })
+  } else {
+    allNotesList.filter()
+  }
+  checkAllNotesList()
+})
+
+// HISTORY
 
 function checkHistoryList () {
   if ($('#history-list').children().length > 0) {
@@ -402,6 +584,7 @@ function buildTagsFilter (tags) {
   }
   filtertags = tags
 }
+
 $('.ui-use-tags').on('change', function () {
   const tags = []
   const data = $(this).select2('data')
