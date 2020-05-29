@@ -122,6 +122,31 @@
                 <ul class="pagination"></ul>
             </div>
 
+            <div id="allNotes" class="section"<% if(!signin) { %> style="display:none;"<% } %>>
+                <br>
+                <form class="form-inline">
+                    <div class="form-group" style="vertical-align: bottom;">
+                        <input class="form-control ui-use-tags" placeholder="<%= __('Select tags...') %>" />
+                    </div>
+                    <div class="form-group">
+                        <input class="search form-control" placeholder="<%= __('Search keyword...') %>" />
+                    </div>
+                    <a href="#" class="sort btn btn-default" data-sort="text" title="<%= __('Sort by title') %>">
+                        <%= __('Title') %>
+                    </a>
+                    <a href="#" class="sort btn btn-default" data-sort="timestamp" title="<%= __('Sort by time') %>">
+                        <%= __('Time') %>
+                    </a>
+                    <a href="#" class="btn btn-default ui-refresh-notes" title="<%= __('Refresh notes') %>"><i class="fa fa-refresh"></i></a>
+                </form>
+                <h4 class="ui-nohistory" style="display:none;">
+                    <%= __('No history') %>
+                </h4>
+                <ul id="all-notes-list" class="list">
+                </ul>
+                <ul class="pagination"></ul>
+            </div>
+
             <div class="mastfoot">
                 <div class="inner">
                     <select class="ui-locale">
