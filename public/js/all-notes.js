@@ -2,45 +2,31 @@
 /* global serverurl, moment */
 
 // import store from 'store'
-// import S from '@hackmd/string'
 import LZString from '@hackmd/lz-string'
+
+import escapeHTML from 'lodash/escape'
 
 import {
   checkNoteIdValid,
   encodeNoteId
 } from './utils'
-import escapeHTML from 'lodash/escape'
 
-// import {
-//   checkIfAuth
-// } from './lib/common/login'
-//
-// import {
-//   urlpath
-// } from './lib/config'
+import { checkIfAuth } from './lib/common/login'
 
-// function getAllNotes (callback) {
-//   $.get(`${serverurl}/allNotes`)
-//     .done(data => {
-//       if (data.allNotes) {
-//         callback(data.allNotes)
-//       }
-//     })
-//     .fail((xhr, status, error) => {
-//       console.error(xhr.responseText)
-//     })
-// }
+// import { urlpath } from './lib/config'
 
 export function parseServerAllNotes (list, callback) {
-  $.get(`${serverurl}/allNotes`)
-    .done(data => {
-      if (data.allNotes) {
-        parseAllNotes(list, data.allNotes, callback)
-      }
-    })
-    .fail((xhr, status, error) => {
-      console.error(xhr.responseText)
-    })
+  checkIfAuth(() =>
+    $.get(`${serverurl}/allNotes`)
+      .done(data => {
+        if (data.allNotes) {
+          parseAllNotes(list, data.allNotes, callback)
+        }
+      })
+      .fail((xhr, status, error) => {
+        console.error(xhr.responseText)
+      })
+  )
 }
 
 function parseAllNotes (list, allNotes, callback) {
@@ -48,7 +34,7 @@ function parseAllNotes (list, allNotes, callback) {
   else if (!list || !allNotes) callback(list, allNotes)
   else if (allNotes && allNotes.length > 0) {
     for (let i = 0; i < allNotes.length; i++) {
-      // // migrate LZString encoded id to base64url encoded id
+      // migrate LZString encoded id to base64url encoded id
       try {
         const id = LZString.decompressFromBase64(allNotes[i].id)
         if (id && checkNoteIdValid(id)) {
@@ -57,8 +43,6 @@ function parseAllNotes (list, allNotes, callback) {
       } catch (err) {
         console.error(err)
       }
-
-      // let id = allNotes[i].id
       // parse time to timestamp and fromNow
       const timestamp = (typeof allNotes[i].updatedAt === 'number' ? moment(allNotes[i].updatedAt) : moment(allNotes[i].updatedAt, 'MMMM Do YYYY, h:mm:ss a'))
       allNotes[i].timestamp = timestamp.valueOf()

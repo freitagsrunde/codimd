@@ -73,7 +73,7 @@ md.renderer.rules.fence = (tokens, idx, options, env, self) => {
   }
 
   if (options.highlight) {
-    highlighted = options.highlight(token.content, langName) || md.utils.escapeHtml(token.content)
+    highlighted = options.highlight(token.content, info) || md.utils.escapeHtml(token.content)
   } else {
     highlighted = md.utils.escapeHtml(token.content)
   }
@@ -125,7 +125,7 @@ md.use(markdownitContainer, 'spoiler', {
       const partClass = `class="part raw" data-startline="${startline}" data-endline="${endline}"`
       const summary = m[1] && m[1].trim()
       if (summary) {
-        return `<details ${partClass}><summary>${md.utils.escapeHtml(summary)}</summary>\n`
+        return `<details ${partClass}><summary>${md.renderInline(summary)}</summary>\n`
       } else {
         return `<details ${partClass}>\n`
       }

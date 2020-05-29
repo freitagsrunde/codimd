@@ -17,7 +17,7 @@
                                 <% if (allowAnonymous) { %>
                                 <a type="button" href="<%- serverURL %>/new" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> <%= __('New guest note') %></a>
                                 <% } %>
-                                <% if (authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.saml || authProviders.oauth2 || authProviders.email) { %>
+                                <% if (authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.bitbucket || authProviders.gitlab ||authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.saml || authProviders.oauth2 || authProviders.email) { %>
                                 <button class="btn btn-sm btn-success ui-signin" data-toggle="modal" data-target=".signin-modal"><%= __('Sign In') %></button>
                                 <% } %>
                             </div>
@@ -52,7 +52,7 @@
                     <% if (errorMessage && errorMessage.length > 0) { %>
                     <div class="alert alert-danger" style="max-width: 400px; margin: 0 auto;"><%= errorMessage %></div>
                     <% } %>
-                    <% if (authProviders.facebook || authProviders.twitter || authProviders.github || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.saml || authProviders.oauth2 || authProviders.email) { %>
+                    <% if (authProviders.facebook || authProviders.twitter || authProviders.github|| authProviders.bitbucket || authProviders.gitlab || authProviders.mattermost || authProviders.dropbox || authProviders.google || authProviders.ldap || authProviders.saml || authProviders.oauth2 || authProviders.email) { %>
                     <span class="ui-signin">
                         <br>
                         <a type="button" class="btn btn-lg btn-success ui-signin" data-toggle="modal" data-target=".signin-modal" style="min-width: 200px;"><%= __('Sign In') %></a>
@@ -125,14 +125,10 @@
             </div>
 
             <div id="all-notes" class="section"<% if(!signin) { %> style="display:none;"<% } %>>
-                <div class="ui-signin"<% if(signin) { %> style="display:none;"<% } %>>
-                    <p><%= __('Below are all non-private Notes from the Server') %></p>
-                </div>
-
                 <br>
                 <form class="form-inline">
                     <div class="form-group" style="vertical-align: bottom;">
-                        <input id="all-notes-tags" class="form-control ui-use-tags" placeholder="<%= __('Select tags...') %>" />
+                        <input class="form-control all-notes-tags" placeholder="<%= __('Select tags...') %>" />
                     </div>
                     <div class="form-group">
                         <input class="search form-control" placeholder="<%= __('Search keyword...') %>" />
@@ -143,10 +139,10 @@
                     <a href="#" class="sort btn btn-default" data-sort="timestamp" title="<%= __('Sort by time') %>">
                         <%= __('Time') %>
                     </a>
-                    <a href="#" class="btn btn-default ui-refresh-all-notes" title="<%= __('Refresh all notes') %>"><i class="fa fa-refresh"></i></a>
                     <a href="#" class="btn btn-default ui-hide-untitled-notes" data-sort="timestamp" title="<%= __('Hide Untitled') %>">
                         <%= __('Hide Untitled') %>
                     </a>
+                    <a href="#" class="btn btn-default ui-refresh-notes" title="<%= __('Refresh notes') %>"><i class="fa fa-refresh"></i></a>
                 </form>
                 <h4 class="ui-nonotes" style="display:none;">
                     <%= __('No Notes') %>

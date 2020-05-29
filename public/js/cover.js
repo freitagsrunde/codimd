@@ -65,7 +65,7 @@ const historyOptions = {
 const historyList = new List('history', historyOptions)
 
 const allNotesOptions = {
-  valueNames: ['id', 'text', 'timestamp', 'fromNow', 'time', 'tags', 'pinned'],
+  valueNames: ['id', 'text', 'timestamp', 'fromNow', 'time', 'tags'],
   item: `<li class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
           <span class="id" style="display:none;"></span>
           <a href="#">
@@ -584,6 +584,7 @@ function buildTagsFilter (tags) {
   }
   filtertags = tags
 }
+
 $('.ui-use-tags').on('change', function () {
   const tags = []
   const data = $(this).select2('data')

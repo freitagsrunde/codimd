@@ -1,12 +1,98 @@
 Release Notes
 ===
 
+<i class="fa fa-tag"></i> 2.0.1 Urocissa caerulea <i class="fa fa-clock-o"></i> 2020-04-09
+---
+
+[CodiMD 2.0.1](https://github.com/hackmdio/codimd/releases/tag/2.0.1) is a minor release fixing bugs introduced in 2.0.0 and earlier versions along with some enhancements. We encourage everyone to upgrade to 2.0.1 now. See how things are going on [GitHub](https://github.com/hackmdio/codimd/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+milestone%3ANext). Stay tuned and healthy, and we hope you love it!
+
+
+### Enhancements
+
+- Allow inline markdown in spoiler summary syntax
+- Improve visibility of some UI elements
+- Support avatar for OAuth users
+
+### Fixes
+
+- Fix to add missing configs in docker secret
+- Fix not able to upload image using imgur
+- Fix to improve version checker behavior
+- Fix Wikipedia link in 2.0.0 release notes
+- Fix require path for minio
+- Fix check for creating free url notes
+
+[Check out the complete release note][v2_0_1]. Thank you CodiMD community and all our contributors. ❤️
+
+[v2_0_1]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_0_1
+
+<i class="fa fa-tag"></i> 2.0.0 Urocissa caerulea <i class="fa fa-clock-o"></i> 2020-03-02
+---
+
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://i.imgur.com/oRbNzRm.jpg" width="600">
+  <small style="display: block;">Urocissa caerulea</small>
+</div>
+
+> The Taiwan blue magpie (Urocissa caerulea), also called the Taiwan magpie, Formosan blue magpie , or the "long-tailed mountain lady", is a species of bird of the crow family. It is endemic to Taiwan.
+> 
+> \- Wikipedia [Taiwan blue magpie](https://en.wikipedia.org/wiki/Taiwan_blue_magpie)
+
+In the past few months, we delivered not only a bunch of awesome features but also some critical bug fixes. Moreover, we refactored CodiMD's backend and started to write new tests.
+
+To make it easier to maintain, we dropped legacy code, reorganize the repository, and add new documentation. For these reasons, we decided to make a huge leap toward version 2.0.0.
+
+Here are the highlights coming from version 2.0.0:
+
+- [Multilanguage spellchecker][multilanguage-spellchecker]
+- [Customize editor color schemes][customize-editor-color-schemes]
+- [Export note with Pandoc][support-pandoc-export]
+- [Embed Geolocation data][embedding-geolocation-data]
+- [Version checking][auto-version-check-for-site-admin]
+- [Meet the new CodiMD CLI][meet-the-new-codimd-cli]
+- [Refreshed Documentation structure and new Markdown guides](refreshed-documentation-structure-and-new-markdown-guides)
+
+It's our pleasure to announce CodiMD `2.0.0`. Enjoy as always :heartpulse:.
+
+[Check out the complete release note][v2_0_0]. Thank you CodiMD community and all our contributors. ❤️
+
+[multilanguage-spellchecker]: https://hackmd.io/@codimd/v2_0_0#Multilanguage-spellchecker
+[customize-editor-color-schemes]: https://hackmd.io/@codimd/v2_0_0#Customize-editor-color-schemes
+[support-pandoc-export]: https://hackmd.io/@codimd/v2_0_0#Support-Pandoc-export
+[embedding-geolocation-data]: https://hackmd.io/@codimd/v2_0_0#Embedding-Geolocation-data
+[auto-version-check-for-site-admin]: https://hackmd.io/@codimd/v2_0_0#Auto-version-check-for-site-admin
+[meet-the-new-codimd-cli]: https://hackmd.io/@codimd/v2_0_0#Meet-the-new-CodiMD-CLI
+[refreshed-documentation-structure-and-new-markdown-guides]: https://hackmd.io/@codimd/v2_0_0#Refreshed-Documentation-structure-and-new-Markdown-guides
+
+[v2_0_0]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_0_0
+
+<i class="fa fa-tag"></i> 1.4.1 <i class="fa fa-clock-o"></i> 2019-12-13
+---
+
+[CodiMD 1.4.1](https://github.com/hackmdio/codimd/releases/tag/1.4.1) is a minor release including bug fixes introduced in 1.4.0 and earlier versions. We encourage everyone to upgrade to 1.4.1 now. Also, we're preparing for the next major release, and you can see how things are going on [GitHub](https://github.com/hackmdio/codimd/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+milestone%3ANext). Stay tuned, and we hope you love it!
+
+### Fixes
+
+- Fix urlpath in webpack build
+- Fix mysql not bundled in package.json
+- Fix minio image uploading
+- Fix pcheck not parsed url correctly
+- Fix manage_users script
+
+### Enhancement
+
+- Added Scalingo compatible deployment
+
+[Check out the complete release note][v1_4_1]. Thank you CodiMD community and all our contributors. ❤️
+
+[v1_4_1]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv1_4_1
+
 <i class="fa fa-tag"></i> 1.4.0 Syrmaticus mikado <i class="fa fa-clock-o"></i> 2019-11-11
 ---
 
 <div style="text-align: center; margin-bottom: 1em;">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Mikado_Pheasant_398.jpg" width="300">
-<small style="display: block;">Mikado Pheasant, photo credits to <a href="https://zh.wikipedia.org/wiki/File:Mikado_Pheasant_398.jpg">Snowyowls from wikipedia</a></small>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Mikado_Pheasant_398.jpg" width="300">
+  <small style="display: block;">Mikado Pheasant, photo credits to <a href="https://zh.wikipedia.org/wiki/File:Mikado_Pheasant_398.jpg">Snowyowls from wikipedia</a></small>
 </div>
 
 Starting from version 1.4.0, we'll pick one species from [_the endemic species of Taiwan_](https://en.wikipedia.org/wiki/List_of_endemic_species_of_Taiwan) as version name. Is there anyone still remember we've once used type of coffee as our version name? It's time to revive that good convention, but this time we don't need coffee to stay up all night. 💤
@@ -20,7 +106,7 @@ It has been over 200+ commits since our last release. These are the highlights f
 - [New Emoji sets][new-emoji]
 - [Slide mode plugins][slide-mode-plugins]: Elapsed time bar and Spotlight
 
-[Go read the complete release note here][v1_4_0]. Thank you CodiMD community and all our contributors. ❤️
+[Check out the complete release note][v1_4_0]. Thank you CodiMD community and all our contributors. ❤️
 
 [table-tools]: https://hackmd.io/@codimd/v1_4_0#New-Table-Tools
 [markdownlint]: https://hackmd.io/@codimd/v1_4_0#Markdownlint-integration
