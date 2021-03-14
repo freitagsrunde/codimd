@@ -216,6 +216,30 @@ When you’re a carpenter making a beautiful chest of drawers, you’re not goin
 > > Even support the nest blockquotes!
 > > [name=ChengHan Wu] [time=Sun, Jun 28, 2015 10:00 PM] [color=red]
 
+### Render CSV as table
+
+You can use write csv in the codeblock:
+
+~~~md
+```csvpreview {header="true"}
+firstName,lastName,email,phoneNumber
+John,Doe,john@doe.com,0123456789
+Jane,Doe,jane@doe.com,9876543210
+James,Bond,james.bond@mi6.co.uk,0612345678
+```
+~~~
+
+which rendered to:
+
+```csvpreview {header="true"}
+firstName,lastName,email,phoneNumber
+John,Doe,john@doe.com,0123456789
+Jane,Doe,jane@doe.com,9876543210
+James,Bond,james.bond@mi6.co.uk,0612345678
+```
+
+We use [Papa Parse](https://www.papaparse.com/) for parsing csv. The parsing option is given in braces: `{}`, and multiple options are seperated by a space. e.g. `{header="true" delimiter="."}`. Please read [their documentation](https://www.papaparse.com/docs#config) as reference.
+
 ## Externals
 
 ### YouTube
@@ -232,7 +256,7 @@ When you’re a carpenter making a beautiful chest of drawers, you’re not goin
 
 ### PDF
 **Caution: this might be blocked by your browser if not using an `https` URL.**
-{%pdf https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf %}
+{%pdf https://www.w3.org/TR/WAI-WEBCONTENT/wai-pageauth.pdf %}
 
 ## MathJax
 
@@ -353,6 +377,41 @@ stop
 }
 ```
 
+### Fretboard
+
+```fretboard {title="horizontal, 6 frets, with nut", type="h6"}
+-oO-*-
+--o-o-
+-o-oo-
+-o-oO-
+-oo-o-
+-*O-o-
+  3
+```
+
+### Mindmap
+
+```markmap
+# markmap-lib
+
+## Links
+
+- <https://markmap.js.org/>
+- [GitHub](https://github.com/gera2ld/markmap-lib)
+
+## Related
+
+- [coc-markmap](https://github.com/gera2ld/coc-markmap)
+- [gatsby-remark-markmap](https://github.com/gera2ld/gatsby-remark-markmap)
+
+## Features
+
+- links
+- **inline** ~~text~~ *styles*
+- multiline
+  text
+```
+
 > More information about **sequence diagrams** syntax [here](http://bramp.github.io/js-sequence-diagrams/).
 > More information about **flow charts** syntax [here](http://adrai.github.io/flowchart.js/).
 > More information about **graphviz** syntax [here](http://www.tonyballantyne.com/graphs.html)
@@ -360,6 +419,7 @@ stop
 > More information about **abc** syntax [here](http://abcnotation.com/learn)
 > More information about **plantuml** syntax [here](http://plantuml.com/index)
 > More information about **vega** syntax [here](https://vega.github.io/vega-lite/docs)
+> More information about **fretboard** syntax [here](https://hackmd.io/@docs/fretboard-syntax)
 
 Alert Area
 ---

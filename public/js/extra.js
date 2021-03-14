@@ -11,11 +11,21 @@ import unescapeHTML from 'lodash/unescape'
 
 import isURL from 'validator/lib/isURL'
 
+import { transform } from 'markmap-lib/dist/transform.common'
+import { markmap } from 'markmap-lib/dist/view.common'
+
 import { stripTags } from '../../utils/string'
 
 import getUIElements from './lib/editor/ui-elements'
 import { emojifyImageDir } from './lib/editor/constants'
-import { parseFenceCodeParams, serializeParamToAttribute } from './lib/markdown/utils'
+import {
+  parseFenceCodeParams,
+  serializeParamToAttribute,
+  deserializeParamAttributeFromElement
+} from './lib/markdown/utils'
+import { renderFretBoard } from './lib/renderer/fretboard/fretboard'
+import './lib/renderer/lightbox'
+import { renderCSVPreview } from './lib/renderer/csvpreview'
 
 import markdownit from 'markdown-it'
 import markdownitContainer from 'markdown-it-container'
@@ -243,7 +253,12 @@ function replaceExtraTags (html) {
   return html
 }
 
-if (typeof window.mermaid !== 'undefined' && window.mermaid) window.mermaid.startOnLoad = false
+if (typeof window.mermaid !== 'undefined' && window.mermaid) {
+  window.mermaid.startOnLoad = false
+  window.mermaid.parseError = function (err, hash) {
+    console.warn(err)
+  }
+}
 
 // dynamic event or object binding here
 export function finishView (view) {
@@ -358,9 +373,10 @@ export function finishView (view) {
   graphvizs.each(function (key, value) {
     try {
       var $value = $(value)
+      const options = deserializeParamAttributeFromElement(value)
       var $ele = $(value).parent().parent()
       $value.unwrap()
-      viz.renderString($value.text())
+      viz.renderString($value.text(), options)
         .then(graphviz => {
           if (!graphviz) throw Error('viz.js output empty graph')
           $value.html(graphviz)
@@ -386,10 +402,14 @@ export function finishView (view) {
       var $value = $(value)
       const $ele = $(value).closest('pre')
 
-      window.mermaid.parse($value.text())
-      $ele.addClass('mermaid')
-      $ele.html($value.text())
-      window.mermaid.init(undefined, $ele)
+      const text = $value.text()
+      // validate the syntax first
+      if (window.mermaid.parse(text)) {
+        $ele.addClass('mermaid')
+        $ele.text(text)
+        // render the diagram
+        window.mermaid.init(undefined, $ele)
+      }
     } catch (err) {
       $value.unwrap()
       $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err.str)}</div>`)
@@ -464,7 +484,7 @@ export function finishView (view) {
         const { lat, lon } = data[0]
         position = [lat, lon]
       }
-      $elem.html(`<div class="geo-map"></div>`)
+      $elem.html('<div class="geo-map"></div>')
       const map = L.map($elem.find('.geo-map')[0]).setView(position, zoom || 16)
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -480,6 +500,39 @@ export function finishView (view) {
       $elem.addClass('geo')
     } catch (err) {
       $elem.append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
+      console.warn(err)
+    }
+  })
+  // fretboard
+  const fretboard = view.find('div.fretboard_instance.raw').removeClass('raw')
+  fretboard.each((key, value) => {
+    const params = deserializeParamAttributeFromElement(value)
+    const $value = $(value)
+
+    try {
+      const $ele = $(value).parent().parent()
+      $ele.html(renderFretBoard($value.text(), params))
+      $ele.addClass('fretboard')
+    } catch (err) {
+      $value.unwrap()
+      $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
+      console.warn(err)
+    }
+  })
+  // markmap
+  view.find('div.markmap.raw').removeClass('raw').each(async (key, value) => {
+    const $elem = $(value).parent().parent()
+    const $value = $(value)
+    const content = $value.text()
+    $value.unwrap()
+    try {
+      const data = transform(content)
+      $elem.html('<div class="markmap-container"><svg></svg></div>')
+      markmap($elem.find('svg')[0], data, {
+        duration: 0
+      })
+    } catch (err) {
+      $elem.html(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
       console.warn(err)
     }
   })
@@ -979,7 +1032,7 @@ export function deduplicatedHeaderId (view) {
   if (window.linkifyHeaderStyle === 'gfm') {
     // consistent with GitHub, GitLab, Pandoc & co.
     // all headers contained in the document, in order of appearance
-    const allHeaders = view.find(`:header`).toArray()
+    const allHeaders = view.find(':header').toArray()
     // list of finaly assigned header IDs
     const headerIds = new Set()
     for (let j = 0; j < allHeaders.length; j++) {
@@ -1049,7 +1102,9 @@ const fenceCodeAlias = {
   mermaid: 'mermaid',
   abc: 'abc',
   vega: 'vega',
-  geo: 'geo'
+  geo: 'geo',
+  fretboard: 'fretboard_instance',
+  markmap: 'markmap'
 }
 
 function highlightRender (code, lang) {
@@ -1146,7 +1201,7 @@ md.use(markdownitContainer, 'spoiler', {
       if (summary) {
         return `<details><summary>${md.renderInline(summary)}</summary>\n`
       } else {
-        return `<details>\n`
+        return '<details>\n'
       }
     } else {
       // closing tag
@@ -1158,6 +1213,7 @@ md.use(markdownitContainer, 'spoiler', {
 const defaultImageRender = md.renderer.rules.image
 md.renderer.rules.image = function (tokens, idx, options, env, self) {
   tokens[idx].attrJoin('class', 'raw')
+  tokens[idx].attrJoin('class', 'md-image')
   return defaultImageRender(...arguments)
 }
 md.renderer.rules.list_item_open = function (tokens, idx, options, env, self) {
@@ -1180,6 +1236,12 @@ md.renderer.rules.fence = (tokens, idx, options, env, self) => {
 
   if (info) {
     langName = info.split(/\s+/g)[0]
+
+    if (langName === 'csvpreview') {
+      const params = parseFenceCodeParams(info)
+      return renderCSVPreview(token.content, params)
+    }
+
     if (/!$/.test(info)) token.attrJoin('class', 'wrap')
     token.attrJoin('class', options.langPrefix + langName.replace(/=$|=\d+$|=\+$|!$|=!$/, ''))
     token.attrJoin('class', 'hljs')

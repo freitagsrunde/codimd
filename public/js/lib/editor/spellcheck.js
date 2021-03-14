@@ -19,15 +19,27 @@ export const supportLanguages = [
     }
   },
   {
+    name: 'English (United Kingdom)',
+    value: 'en_GB',
+    aff: {
+      url: `${serverurl}/build/dictionary-en-gb/index.aff`,
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-en-gb@2.2.2/index.aff'
+    },
+    dic: {
+      url: `${serverurl}/build/dictionary-en-gb/index.dic`,
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-en-gb@2.2.2/index.dic'
+    }
+  },
+  {
     name: 'German',
     value: 'de',
     aff: {
       url: `${serverurl}/build/dictionary-de/index.aff`,
-      cdnUrl: `https://cdn.jsdelivr.net/npm/dictionary-de@2.0.3/index.aff`
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-de@2.0.3/index.aff'
     },
     dic: {
       url: `${serverurl}/build/dictionary-de/index.dic`,
-      cdnUrl: `https://cdn.jsdelivr.net/npm/dictionary-de@2.0.3/index.dic`
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-de@2.0.3/index.dic'
     }
   },
   {
@@ -35,11 +47,11 @@ export const supportLanguages = [
     value: 'de_AT',
     aff: {
       url: `${serverurl}/build/dictionary-de-at/index.aff`,
-      cdnUrl: `https://cdn.jsdelivr.net/npm/dictionary-de-at@2.0.3/index.aff`
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-de-at@2.0.3/index.aff'
     },
     dic: {
       url: `${serverurl}/build/dictionary-de-at/index.dic`,
-      cdnUrl: `https://cdn.jsdelivr.net/npm/dictionary-de-at@2.0.3/index.dic`
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-de-at@2.0.3/index.dic'
     }
   },
   {
@@ -47,11 +59,11 @@ export const supportLanguages = [
     value: 'de_CH',
     aff: {
       url: `${serverurl}/build/dictionary-de-ch/index.aff`,
-      cdnUrl: `https://cdn.jsdelivr.net/npm/dictionary-de-ch@2.0.3/index.aff`
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-de-ch@2.0.3/index.aff'
     },
     dic: {
       url: `${serverurl}/build/dictionary-de-ch/index.dic`,
-      cdnUrl: `https://cdn.jsdelivr.net/npm/dictionary-de-ch@2.0.3/index.dic`
+      cdnUrl: 'https://cdn.jsdelivr.net/npm/dictionary-de-ch@2.0.3/index.dic'
     }
   }
 ]
