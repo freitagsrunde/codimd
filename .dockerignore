@@ -12,5 +12,3 @@ public/views/build
 
 .nyc_output
 coverage/
-
-deployments/
