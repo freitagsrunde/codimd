@@ -1,7 +1,4 @@
-ARG RUNTIME
-ARG BUILDPACK
-
-FROM $BUILDPACK as BUILD
+FROM hackmdio/buildpack:16.20.2-35fe7e39 as BUILD
 
 COPY --chown=hackmd:hackmd package.json package.json
 COPY --chown=hackmd:hackmd package-lock.json package-lock.json
@@ -20,7 +17,7 @@ RUN npm run build && \
         package-lock.json webpack.prod.js webpack.htmlexport.js webpack.dev.js webpack.common.js \
         config.json.example README.md CONTRIBUTING.md AUTHORS node_modules
 
-FROM hackmdio/runtime:node-10-d27854ef
+FROM hackmdio/runtime:16.20.2-35fe7e39
 USER hackmd
 ENV QT_QPA_PLATFORM=offscreen
 WORKDIR /home/hackmd/app
