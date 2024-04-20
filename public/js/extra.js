@@ -11,8 +11,8 @@ import unescapeHTML from 'lodash/unescape'
 
 import isURL from 'validator/lib/isURL'
 
-import { transform } from 'markmap-lib/dist/transform.common'
-import { markmap } from 'markmap-lib/dist/view.common'
+import { transform } from 'markmap-lib/dist/transform'
+import { Markmap } from 'markmap-lib/dist/view'
 
 import { stripTags } from '../../utils/string'
 
@@ -26,6 +26,9 @@ import {
 import { renderFretBoard } from './lib/renderer/fretboard/fretboard'
 import './lib/renderer/lightbox'
 import { renderCSVPreview } from './lib/renderer/csvpreview'
+
+import { escapeAttrValue } from './render'
+import { sanitizeUrl } from './utils'
 
 import markdownit from 'markdown-it'
 import markdownitContainer from 'markdown-it-container'
@@ -202,18 +205,15 @@ export function parseMeta (md, edit, view, toc, tocAffix) {
     dir = meta.dir
     breaks = meta.breaks
   }
-  // text language
-  if (lang && typeof lang === 'string') {
-    view.attr('lang', lang)
-    toc.attr('lang', lang)
-    tocAffix.attr('lang', lang)
-    if (edit) { edit.attr('lang', lang) }
-  } else {
-    view.removeAttr('lang')
-    toc.removeAttr('lang')
-    tocAffix.removeAttr('lang')
-    if (edit) { edit.removeAttr('lang', lang) }
+  if (!lang || typeof lang !== 'string') {
+    lang = 'en'
   }
+  // text language
+  view.attr('lang', lang)
+  toc.attr('lang', lang)
+  tocAffix.attr('lang', lang)
+  if (edit) { edit.attr('lang', lang) }
+
   // text direction
   if (dir && typeof dir === 'string') {
     view.attr('dir', dir)
@@ -257,6 +257,23 @@ if (typeof window.mermaid !== 'undefined' && window.mermaid) {
   window.mermaid.startOnLoad = false
   window.mermaid.parseError = function (err, hash) {
     console.warn(err)
+  }
+}
+
+function jsonp (url, callback) {
+  const callbackName = 'jsonp_callback_' + Math.round(1000000000 * Math.random())
+  window[callbackName] = function (data) {
+    delete window[callbackName]
+    document.body.removeChild(script)
+    callback(data)
+  }
+
+  const script = document.createElement('script')
+  script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName
+  document.body.appendChild(script)
+  script.onerror = function (e) {
+    console.error(e)
+    script.remove()
   }
 }
 
@@ -304,22 +321,41 @@ export function finishView (view) {
       imgPlayiframe(this, '//player.vimeo.com/video/')
     })
     .each((key, value) => {
-      $.ajax({
-        type: 'GET',
-        url: `//vimeo.com/api/v2/video/${$(value).attr('data-videoid')}.json`,
-        jsonp: 'callback',
-        dataType: 'jsonp',
-        success (data) {
-          const thumbnailSrc = data[0].thumbnail_large
-          const image = `<img src="${thumbnailSrc}" />`
-          $(value).prepend(image)
-          if (window.viewAjaxCallback) window.viewAjaxCallback()
+      const videoId = $(value).attr('data-videoid')
+      let urlForJsonp = ''
+      try {
+        const url = new URL(`https://vimeo.com/api/v2/video/${videoId}.json`)
+        if (!url.pathname.startsWith('/api/v2/video/')) {
+          throw new Error(`Invalid vimeo video id: ${videoId}`)
         }
+        urlForJsonp = `//${url.origin}${url.pathname}`
+      } catch (err) {
+        console.error(err)
+        return
+      }
+      jsonp(urlForJsonp, function (data) {
+        const thumbnailSrc = data[0].thumbnail_large
+        const image = `<img src="${thumbnailSrc}" />`
+        $(value).prepend(image)
+        if (window.viewAjaxCallback) window.viewAjaxCallback()
       })
     })
     // gist
   view.find('code[data-gist-id]').each((key, value) => {
-    if ($(value).children().length === 0) { $(value).gist(window.viewAjaxCallback) }
+    if ($(value).children().length === 0) {
+      // strip HTML tags to avoid stored XSS
+      const gistid = value.getAttribute('data-gist-id')
+      value.setAttribute('data-gist-id', stripTags(gistid))
+      const gistfile = value.getAttribute('data-gist-file')
+      if (gistfile) value.setAttribute('data-gist-file', stripTags(gistfile))
+      const gistline = value.getAttribute('data-gist-line')
+      if (gistline) value.setAttribute('data-gist-line', stripTags(gistline))
+      const gisthighlightline = value.getAttribute('data-gist-highlight-line')
+      if (gisthighlightline) value.setAttribute('data-gist-highlight-line', stripTags(gisthighlightline))
+      const gistshowloading = value.getAttribute('data-gist-show-loading')
+      if (gistshowloading) value.setAttribute('data-gist-show-loading', stripTags(gistshowloading))
+      $(value).gist(window.viewAjaxCallback)
+    }
   })
   // sequence diagram
   const sequences = view.find('div.sequence-diagram.raw').removeClass('raw')
@@ -526,11 +562,11 @@ export function finishView (view) {
     const content = $value.text()
     $value.unwrap()
     try {
-      const data = transform(content)
+      const { root: data } = transform(content)
       $elem.html('<div class="markmap-container"><svg></svg></div>')
-      markmap($elem.find('svg')[0], data, {
+      Markmap.create($elem.find('svg')[0], {
         duration: 0
-      })
+      }, data)
     } catch (err) {
       $elem.html(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
       console.warn(err)
@@ -595,11 +631,14 @@ export function finishView (view) {
   view.find('div.pdf.raw').removeClass('raw')
     .each(function (key, value) {
       const url = $(value).attr('data-pdfurl')
+      const cleanUrl = sanitizeUrl(url)
       const inner = $('<div></div>')
       $(this).append(inner)
-      PDFObject.embed(url, inner, {
-        height: '400px'
-      })
+      setTimeout(() => {
+        PDFObject.embed(cleanUrl, inner, {
+          height: '400px'
+        })
+      }, 1)
     })
     // syntax highlighting
   view.find('code.raw').removeClass('raw')
@@ -791,8 +830,8 @@ export function exportToHTML (view) {
         html: src[0].outerHTML,
         'ui-toc': toc.html(),
         'ui-toc-affix': tocAffix.html(),
-        lang: (md && md.meta && md.meta.lang) ? `lang="${md.meta.lang}"` : null,
-        dir: (md && md.meta && md.meta.dir) ? `dir="${md.meta.dir}"` : null
+        lang: (md && md.meta && md.meta.lang) ? `lang="${escapeAttrValue(md.meta.lang)}"` : null,
+        dir: (md && md.meta && md.meta.dir) ? `dir="${escapeAttrValue(md.meta.dir)}"` : null
       }
       const html = template(context)
       //        console.log(html);
@@ -849,13 +888,16 @@ let tocExpand = false
 
 function checkExpandToggle () {
   const toc = $('.ui-toc-dropdown .toc')
-  const toggle = $('.expand-toggle')
+  const expand = $('.expand-toggle.expand-all')
+  const collapse = $('.expand-toggle.collapse-all')
   if (!tocExpand) {
     toc.removeClass('expand')
-    toggle.text('Expand all')
+    expand.show()
+    collapse.hide()
   } else {
     toc.addClass('expand')
-    toggle.text('Collapse all')
+    expand.hide()
+    collapse.show()
   }
 }
 
@@ -878,11 +920,12 @@ export function generateToc (id) {
   })
   /* eslint-enable no-unused-vars */
   if (target.text() === 'undefined') { target.html('') }
-  const tocMenu = $('<div class="toc-menu"></div')
-  const toggle = $('<a class="expand-toggle" href="#">Expand all</a>')
-  const backtotop = $('<a class="back-to-top" href="#">Back to top</a>')
-  const gotobottom = $('<a class="go-to-bottom" href="#">Go to bottom</a>')
   checkExpandToggle()
+  const tocMenu = $('body').children('.toc-menu')
+  target.append(tocMenu.clone().show())
+  const toggle = $('.expand-toggle', target)
+  const backtotop = $('.back-to-top', target)
+  const gotobottom = $('.go-to-bottom', target)
   toggle.click(e => {
     e.preventDefault()
     e.stopPropagation()
@@ -901,8 +944,6 @@ export function generateToc (id) {
     if (window.scrollToBottom) { window.scrollToBottom() }
     removeHash()
   })
-  tocMenu.append(toggle).append(backtotop).append(gotobottom)
-  target.append(tocMenu)
 }
 
 // smooth all hash trigger scrolling

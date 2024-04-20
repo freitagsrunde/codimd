@@ -1,6 +1,195 @@
 Release Notes
 ===
 
+<i class="fa fa-tag"></i> 2.5.3 <i class="fa fa-clock-o"></i> 2024-01-08
+---
+
+[Check out the complete release note][v2_5_3]. Thank you CodiMD community and all our contributors. ❤️
+
+[v2_5_3]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_5_3
+
+It's a minor fix release that bumps the version number in `package.json`
+
+## Enhancements
+
+- Add `codeium-chrome` extension support [#1851](https://github.com/hackmdio/codimd/pull/1851)
+- Add `check-release` GitHub action workflow that prevents us from forgetting to update the `package.json` during releases again [#1852](https://github.com/hackmdio/codimd/pull/1852)
+
+<i class="fa fa-tag"></i> 2.5.2 <i class="fa fa-clock-o"></i> 2024-01-05
+---
+
+[Check out the complete release note][v2_5_2]. Thank you CodiMD community and all our contributors. ❤️
+
+[v2_5_2]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_5_2
+
+This is another recovery release that fixes the pandoc DoS issue.
+
+## Enhancements
+
+- Build docker image using github actions
+
+## Fixes
+
+- **\[Security Issue]** address denial of service issue in actionPandoc
+
+
+<i class="fa fa-tag"></i> 2.5.1 <i class="fa fa-clock-o"></i> 2024-01-03
+---
+
+[Check out the complete release note][v2_5_1]. Thank you CodiMD community and all our contributors. ❤️
+
+[v2_5_1]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_5_1
+
+
+## Security Fixes
+
+- **\[Security Issue]** Bump `@hackmd/pandoc.js` version to 0.2.0
+
+## Fixes
+
+- Replace mattermost-redux with mattermost/client
+- Fix dependency resolving with prom-client v12
+
+
+<i class="fa fa-tag"></i> 2.5.0 The Formosan hare <i class="fa fa-clock-o"></i> 2023-12-26
+---
+
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Lepus_sinensis_formosus.jpg/640px-Lepus_sinensis_formosus.jpg" width="600">
+  <small style="display: block;">The Formosan hare</small>
+</div>
+
+> The Formosan hare (scientific name: Lepus sinensis formosus), a species of the rabbit family, is a subspecies unique to Taiwan. It measures 30-40 centimeters in length, with a tail that's 5-6 centimeters long and ears that are 8-10 centimeters long. Smaller than the Chinese hare, it has brownish eyes.
+> [Wikipedia](https://zh.wikipedia.org/wiki/%E5%8F%B0%E7%81%A3%E9%87%8E%E5%85%94?oldformat=true)
+
+[Check out the complete release note][v2_5_0]. Thank you CodiMD community and all our contributors. ❤️
+
+[v2_5_0]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_5_0
+
+## Security Fixes
+* **\[Security Issue]** Strip HTML tags for gist id to avoid stored XSS on showing error [Security Issue]
+* **\[Security Issue]** Upgrade mermaid to version 8.10.2 to avoid prototype pollution
+* **\[Security Issue]** potential XSS in vimeo embed
+* **\[Security Issue]** FIX: pandoc security issue
+* **\[Security Issue]** fix: sanitize pdf url to prevent XSS on inline PDFs
+
+## Fixes
+* Avoid append zero suffix on exporting user data
+* Handle when request url has no valid referer
+* Fix S3 client config passing for image upload
+* Set a proper "lang" attribute on <html>
+* Fix matchInContainer false positives
+* Convert "include" directives to functions
+* Move HTML-related code from JS to EJS to enable more i18n
+* fix: may referernce out of bound index in clearDuplicatedHistory
+* Feat/csrf export user data
+* sequelize.import deprecation
+* chore: remove unused uglifyjs-webpack-plugin dep
+* fix: should not clear guest history when guest pin note
+* Fix: s3 api supported multiple cloud providers. fixes: https://github.com/hackmdio/codimd/issues/1761
+* Fix: Code Fence parameter parsing
+* Update README.md to remove IE from supporting list
+* FIX: server crash when filename too long
+* fix: use encoded note id to update history
+* 🐛 [fix] modify replacement rule for disqus short-name
+* Fix history page nav
+* Fix the uploadimage form
+* Add the logout callback to prevent exception
+
+## Enhancements
+* Add TeX mhchem extensions for MathJax
+* Upgrade flowchart.js to version 1.15.0
+* Upgrade codemirror to 5.63.2
+* Update de.json in
+* Documentation - add Music section and move abc abd fretboard to this section
+* chore: bump meta-marked to 0.5.0
+* Typos + Better translation for "Externals"
+* feat: Migrate to gtag and support GA4
+* 【fix】reword japanese
+* upgrading pg to 8.8.0 to support new scram-sha-256 authentication
+* feat: add organizations whitelist to GitHub OAuth
+* Add oauth2 authorization
+* Update both Traditional and Simplified Chinese locales
+
+## DX
+* Run CI with GitHub Actions
+* Add dev container for GitHub Codespaces and VSCode remote container
+* Add arm64 docker image build.
+* fix(buildpacks): replace custom buildpack with APT buildpack
+* Update minimum required node.js version to v12 with npm package dependencies
+* Upgrade Node.js version
+* Update node.js version in .nvmrc
+* Update npm dependencies
+
+<i class="fa fa-tag"></i> 2.4.2 <i class="fa fa-clock-o"></i> 2022-08-06
+---
+
+## Security Fixes
+- **[Security Issue]** Upgrade flowchart.js to version 1.15.0
+- **[Security Issue]** Upgrade mermaid to 8.10.2
+- **[Security Issue]** Strip HTML tags for gist id to avoid stored XSS on showing error
+- **[Security Issue]** Add CSRF token in export API to prevent security issue
+- **[Security Issue]** Upgrade CodeMirror to 5.63.2
+
+## Fixes
+- Fix container syntax not parsed correctly
+- Handle request url has no valid referer case
+- Fix S3 client config passing for image upload
+- Fix array access index may out of bound
+- Remove unused uglifyjs webpack plugin dependency
+
+## Enhancements
+- Set lang attributes via user locale
+- Use include function instead of directives
+- Extract more keyword for i18n translate
+- Avoid append zero suffix on exporting user data
+- Add TeX mhchem extensions for MathJax
+- Support arm64 docker image
+- Refactor Sequelize model import mechanism due to sequelize.import is deprecated
+- Better german translation
+
+## DX
+- Support DevContainer for GitHub Codespaces and VSCode remote container
+- Run CI with GitHub Actions
+
+<i class="fa fa-tag"></i> 2.4.0 Papilio maraho <i class="fa fa-clock-o"></i> 2021-05-11
+---
+
+<div style="text-align: center; margin-bottom: 1em;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Papilio_maraho_male_ventral_view_20160423.jpg/569px-Papilio_maraho_male_ventral_view_20160423.jpg" width="600">
+  <small style="display: block;">Papilio maraho</small>
+</div>
+
+> Papilio maraho is a species of butterfly in the family Papilionidae. It is endemic to Taiwan.
+> \- Wikipedia [Papilio maraho](https://en.wikipedia.org/wiki/Papilio_maraho)
+
+[Check out the complete release note][v2_4_0]. Thank you CodiMD community and all our contributors. ❤️
+
+[v2_4_0]: https://hackmd.io/@codimd/release-notes/%2F%40codimd%2Fv2_4_0
+
+## Enhancements
+
+- Support autofix linter errors
+- Support anonymous updates via API
+- Support mediawiki export format in pandoc export
+- Add some help strings to Prometheus metrics
+- Allow more syntax highlight modes in editor
+- Support TOC level customization
+- Follow Google guidelines to use Google OAuth
+
+## Fixes
+
+- Vimeo won't show up due to the jsonp callback data unable be parsed with jQuery
+- Fix slide mode stored XSS
+- Enforce PG ssl require mode on heroku
+- Webpack exclude path should support windows path
+- Free url can read any md in file system
+- Use encoded noteId when calling updateHistory
+
+## Docs
+
+- Add matrix badge and links to README [#1629](https://github.com/hackmdio/codimd/pull/1629) [@a-andreyev](https://github.com/a-andreyev)
+
 <i class="fa fa-tag"></i> 2.3.1 Isoetes taiwanensis <i class="fa fa-clock-o"></i> 2021-01-04
 ---
 

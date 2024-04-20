@@ -4,6 +4,7 @@ CodiMD
 [![build status][travis-image]][travis-url]
 [![version][github-version-badge]][github-release-page]
 [![Gitter][gitter-image]][gitter-url]
+[![Matrix][matrix-image]][matrix-url]
 [![POEditor][poeditor-image]][poeditor-url]
 
 CodiMD lets you collaborate in real-time with markdown.
@@ -80,7 +81,7 @@ CodiMD is a service that runs on Node.js, while users use the service through br
 - <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" /> Chrome >= 47, Chrome for Android >= 47
 - <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" /> Safari >= 9, iOS Safari >= 8.4
 - <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" /> Firefox >= 44
-- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" /> IE >= 9, Edge >= 12
+- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="Edge" width="24px" height="24px" /> Edge >= 12
 - <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" /> Opera >= 34, Opera Mini not supported
 - Android Browser >= 4.4
 
@@ -90,7 +91,7 @@ To stay up to date with your installation it's recommended to subscribe the [rel
 
 **License under AGPL.**
 
-[gitter-image]: https://img.shields.io/badge/gitter-hackmdio/codimd-blue.svg	
+[gitter-image]: https://img.shields.io/badge/gitter-hackmdio/codimd-blue.svg
 [gitter-url]: https://gitter.im/hackmdio/hackmd
 [travis-image]: https://travis-ci.com/hackmdio/codimd.svg?branch=master
 [travis-url]: https://travis-ci.com/hackmdio/codimd
@@ -99,3 +100,5 @@ To stay up to date with your installation it's recommended to subscribe the [rel
 [github-release-feed]: https://github.com/hackmdio/codimd/releases.atom
 [poeditor-image]: https://img.shields.io/badge/POEditor-translate-blue.svg
 [poeditor-url]: https://poeditor.com/join/project/q0nuPWyztp
+[matrix-image]: https://img.shields.io/matrix/hackmdio_hackmd:gitter.im?color=blue&logo=matrix
+[matrix-url]: https://matrix.to/#/#hackmdio_hackmd:gitter.im
