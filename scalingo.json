@@ -152,6 +152,22 @@
             "description": "Enable or disable PDF exports",
             "required": false
         },
+        "CMD_CUSTOM_CSS_TYPE": {
+            "description": "Type of custom css ('none', 'path', 'url', 'data')",
+            "required": false
+        },
+        "CMD_CUSTOM_CSS_PATH": {
+            "description": "Path to custom CSS file",
+            "required": false
+        },
+        "CMD_CUSTOM_CSS_URL": {
+            "description": "URL to custom CSS file",
+            "required": false
+        },
+        "CMD_CUSTOM_CSS_DATA": {
+            "description": "Raw custom CSS",
+            "required": false
+        },
         "CMD_DB_URL": {
             "description": "Database query url",
             "value": "$DATABASE_URL"

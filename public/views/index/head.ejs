@@ -22,3 +22,10 @@
   <link rel="stylesheet" href='<%- serverURL %>/build/fork-awesome/css/fork-awesome.min.css'>
 <%- include('../build/cover-pack-header') %>
 <% } %>
+<% if(customCSSType === 'path') { %>
+<link rel="stylesheet" href="<%- serverURL %>/<%- customCSSPath %>">
+<% } else if (customCSSType === 'url') { %>
+<link rel="stylesheet" href="<%- customCSSURL %>">
+<% } else if (customCSSType === 'data') { %>
+<style><%= customCSSData %></style>
+<% } %>

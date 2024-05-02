@@ -199,6 +199,10 @@ app.locals.allowAnonymous = config.allowAnonymous
 app.locals.allowAnonymousEdits = config.allowAnonymousEdits
 app.locals.permission = config.permission
 app.locals.allowPDFExport = config.allowPDFExport
+app.locals.customCSSType = config.customCSSType
+app.locals.customCSSPath = config.customCSSPath
+app.locals.customCSSURL = config.customCSSURL
+app.locals.customCSSData = config.customCSSData
 app.locals.authProviders = {
   facebook: config.isFacebookEnable,
   twitter: config.isTwitterEnable,

@@ -24,3 +24,10 @@
 <%- include('../build/index-pack-header') %>
 <% } %>
 <link rel="stylesheet" href='<%- serverURL %>/markdown-lint/css/lint.css'>
+<% if(customCSSType === 'path') { %>
+<link rel="stylesheet" href="<%- serverURL %>/<%- customCSSPath %>">
+<% } else if (customCSSType === 'url') { %>
+<link rel="stylesheet" href="<%- customCSSURL %>">
+<% } else if (customCSSType === 'data') { %>
+<style><%= customCSSData %></style>
+<% } %>
