@@ -608,7 +608,7 @@ $('.ui-use-tags').on('change', function () {
   checkHistoryList()
 })
 
-let lastSearchInputTime = 0;
+let lastSearchInputTime = 0
 
 $('.search2').on('input', () => {
   const eventTime = Date.now()
