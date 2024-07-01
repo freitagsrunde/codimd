@@ -252,9 +252,9 @@ $('.ui-refresh-all-notes').click(() => {
   const lastTags = $('.ui-use-tags').select2('val')
   $('.ui-use-tags').select2('val', '')
   allNotesList.filter()
-  const lastKeyword = $('.search').val()
-  $('.search').val('')
-  allNotesList.search()
+  const lastKeyword = $('.search2').val()
+  $('.search2').val('')
+  allNotesList.search2()
   $('#all-notes-list').slideUp('fast')
   $('.pagination').hide()
 
@@ -264,8 +264,8 @@ $('.ui-refresh-all-notes').click(() => {
     parseAllNotesCallback(list, notehistory)
     $('.ui-use-tags').select2('val', lastTags)
     $('.ui-use-tags').trigger('change')
-    allNotesList.search(lastKeyword)
-    $('.search').val(lastKeyword)
+    allNotesList.search2(lastKeyword)
+    $('.search2').val(lastKeyword)
     checkAllNotesList()
     $('#all-notes-list').slideDown('fast')
   })
@@ -534,9 +534,9 @@ $('.ui-refresh-history').click(() => {
   const lastTags = $('.ui-use-tags').select2('val')
   $('.ui-use-tags').select2('val', '')
   historyList.filter()
-  const lastKeyword = $('.search').val()
-  $('.search').val('')
-  historyList.search()
+  const lastKeyword = $('.search2').val()
+  $('.search2').val('')
+  historyList.search2()
   $('#history-list').slideUp('fast')
   $('.pagination').hide()
 
@@ -546,8 +546,8 @@ $('.ui-refresh-history').click(() => {
     parseHistoryCallback(list, notehistory)
     $('.ui-use-tags').select2('val', lastTags)
     $('.ui-use-tags').trigger('change')
-    historyList.search(lastKeyword)
-    $('.search').val(lastKeyword)
+    historyList.search2(lastKeyword)
+    $('.search2').val(lastKeyword)
     checkHistoryList()
     $('#history-list').slideDown('fast')
   })
@@ -608,8 +608,21 @@ $('.ui-use-tags').on('change', function () {
   checkHistoryList()
 })
 
-$('.search').keyup(() => {
-  checkHistoryList()
+let lastSearchInputTime = 0;
+
+$('.search2').on('input', () => {
+  const eventTime = Date.now()
+  lastSearchInputTime = eventTime
+  setTimeout(() => {
+    if (lastSearchInputTime === eventTime) {
+      $.post('/search', { query: $('.search2').val() }, (result) => {
+        historyList.filter((elem) => {
+          return result.allNotes.indexOf(elem._values.id) !== -1
+        })
+        checkHistoryList()
+      })
+    }
+  }, 250)
 })
 
 $('.ui-export-user-data').click(function (e) {
