@@ -252,8 +252,8 @@ $('.ui-refresh-all-notes').click(() => {
   const lastTags = $('.ui-use-tags').select2('val')
   $('.ui-use-tags').select2('val', '')
   allNotesList.filter()
-  const lastKeyword = $('.search2').val()
-  $('.search2').val('')
+  const lastKeyword = $('.search').val()
+  $('.search').val('')
   allNotesList.search2()
   $('#all-notes-list').slideUp('fast')
   $('.pagination').hide()
@@ -265,7 +265,7 @@ $('.ui-refresh-all-notes').click(() => {
     $('.ui-use-tags').select2('val', lastTags)
     $('.ui-use-tags').trigger('change')
     allNotesList.search2(lastKeyword)
-    $('.search2').val(lastKeyword)
+    $('.search').val(lastKeyword)
     checkAllNotesList()
     $('#all-notes-list').slideDown('fast')
   })
@@ -534,8 +534,8 @@ $('.ui-refresh-history').click(() => {
   const lastTags = $('.ui-use-tags').select2('val')
   $('.ui-use-tags').select2('val', '')
   historyList.filter()
-  const lastKeyword = $('.search2').val()
-  $('.search2').val('')
+  const lastKeyword = $('.search').val()
+  $('.search').val('')
   historyList.search2()
   $('#history-list').slideUp('fast')
   $('.pagination').hide()
@@ -547,7 +547,7 @@ $('.ui-refresh-history').click(() => {
     $('.ui-use-tags').select2('val', lastTags)
     $('.ui-use-tags').trigger('change')
     historyList.search2(lastKeyword)
-    $('.search2').val(lastKeyword)
+    $('.search').val(lastKeyword)
     checkHistoryList()
     $('#history-list').slideDown('fast')
   })
@@ -608,19 +608,31 @@ $('.ui-use-tags').on('change', function () {
   checkHistoryList()
 })
 
+$('.search').keyup(() => {
+  checkHistoryList()
+})
+
 let lastSearchInputTime = 0
 
-$('.search2').on('input', () => {
+$('.fulltext-search').on('input', () => {
   const eventTime = Date.now()
   lastSearchInputTime = eventTime
   setTimeout(() => {
     if (lastSearchInputTime === eventTime) {
-      $.post('/search', { query: $('.search2').val() }, (result) => {
-        historyList.filter((elem) => {
-          return result.allNotes.indexOf(elem._values.id) !== -1
+      const isAllNotes = $('.ui-all-notes').hasClass('active')
+      const list = isAllNotes ? allNotesList : historyList
+      const query = $('.fulltext-search')[isAllNotes ? 1 : 0].value
+
+      if (query === '') {
+        list.filter()
+      } else {
+        $.post('/search', { query }, (result) => {
+          list.filter((elem) => {
+            return result.allNotes.indexOf(elem._values.id) !== -1
+          })
+          checkHistoryList()
         })
-        checkHistoryList()
-      })
+      }
     }
   }, 250)
 })
