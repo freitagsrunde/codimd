@@ -1636,7 +1636,7 @@ function updatePermission (newPermission) {
       $('#permissionLabelPrivate').show()
       break
   }
-  if (personalInfo.userid && window.owner && personalInfo.userid === window.owner) {
+  if (personalInfo.userid && window.owner) {
     ui.infobar.permission.labelCaretDown.show()
     ui.infobar.permission.label.removeClass('disabled')
   } else {
